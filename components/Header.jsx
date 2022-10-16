@@ -11,6 +11,7 @@ function Header() {
           objectFit="contain"
           objectPosition="left"
           className="cursor-pointer"
+          alt="logo"
         />
       </div>
 
