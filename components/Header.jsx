@@ -1,6 +1,46 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { DateRangePicker } from "react-date-range";
 
-function Header() {
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
+
+function Header({ placeholder }) {
+  const [searchValue, setSearchValue] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [noOfGuests, setNoOfGuests] = useState(1);
+
+  const router = useRouter();
+
+  const handleSelect = (ranges) => {
+    setStartDate(ranges.selection.startDate);
+    setEndDate(ranges.selection.endDate);
+  };
+
+  const resetSearch = () => {
+    setSearchValue("");
+  };
+
+  const search = () => {
+    router.push({
+      pathname: "/search",
+      query: {
+        location: searchValue,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        noOfGuests,
+      },
+    });
+  };
+
+  const selectionRange = {
+    startDate,
+    endDate,
+    key: "selection",
+  };
+
   return (
     <header className="py-3 px-5 md:px-10 bg-white grid grid-cols-3 shadow-md sticky top-0 z-50">
       {/* Left */}
@@ -12,6 +52,7 @@ function Header() {
           objectPosition="left"
           className="cursor-pointer"
           alt="logo"
+          onClick={() => router.push("/")}
         />
       </div>
 
@@ -19,8 +60,10 @@ function Header() {
       <div className="relative flex items-center rounded-full border md:shadow-sm px-2">
         <input
           type="text"
-          placeholder="Start your search..."
-          className="bg-transparent outline-none py-2 flex-grow pl-2 text-gray-500"
+          placeholder={placeholder || "Start your search..."}
+          className="bg-transparent outline-none py-2 flex-grow pl-2 text-gray-500 placeholder:text-sm"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -28,6 +71,7 @@ function Header() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
+          onClick={search}
           className="w-8 h-8 hidden md:inline-flex bg-red-400 rounded-full p-2 text-white cursor-pointer"
         >
           <path
@@ -88,6 +132,54 @@ function Header() {
           </svg>
         </div>
       </div>
+
+      {searchValue && (
+        <div className="col-span-3 mx-auto flex flex-col">
+          <DateRangePicker
+            minDate={new Date()}
+            ranges={[selectionRange]}
+            rangeColors={["#FD5B91"]}
+            onChange={handleSelect}
+          />
+
+          <div className="flex items-center border-b pb-2">
+            <h2 className="text-2xl font-semibold flex-grow">
+              Number of Guests
+            </h2>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-6 h-6"
+            >
+              <path d="M4.5 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM14.25 8.625a3.375 3.375 0 116.75 0 3.375 3.375 0 01-6.75 0zM1.5 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM17.25 19.128l-.001.144a2.25 2.25 0 01-.233.96 10.088 10.088 0 005.06-1.01.75.75 0 00.42-.643 4.875 4.875 0 00-6.957-4.611 8.586 8.586 0 011.71 5.157v.003z" />
+            </svg>
+            <input
+              type="number"
+              className="w-12 pl-2 text-red-400 text-lg outline-none"
+              min={1}
+              value={noOfGuests}
+              onChange={(e) => setNoOfGuests(e.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center pt-2">
+            <button
+              className="py-2 flex-grow hover:bg-gray-100 transition rounded-lg"
+              onClick={resetSearch}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={search}
+              className="py-2 flex-grow hover:bg-red-400 rounded-lg text-red-400 hover:text-white transition"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

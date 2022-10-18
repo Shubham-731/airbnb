@@ -1,18 +1,13 @@
-import Header from "../components/Header";
 import Banner from "../components/Banner";
 import Smallcard from "../components/Smallcard";
 import Card from "../components/Card";
 import Largecard from "../components/Largecard";
-import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 export default function Home({ exploreData, cardsData }) {
-  console.log(cardsData);
-
   return (
     <>
-      <title>Home | Airbnb</title>
       <Header />
-
       <Banner />
 
       <main className="max-w-7xl mx-auto px-8 sm:px-16 ">
@@ -48,8 +43,6 @@ export default function Home({ exploreData, cardsData }) {
           buttonText="Get Inspired"
         />
       </main>
-
-      <Footer />
     </>
   );
 }

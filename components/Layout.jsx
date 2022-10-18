@@ -1,6 +1,8 @@
 import Head from "next/head";
+import Header from "./Header";
+import Footer from "./Footer";
 
-const Layout = ({ children, title }) => {
+const Layout = ({ children }) => {
   return (
     <>
       <Head>
@@ -12,10 +14,11 @@ const Layout = ({ children, title }) => {
           href="/assets/images/logo.png"
           type="image/x-icon"
         />
-        <title>{title ? title : "Home"} | Airbnb</title>
+        <title>Home | Airbnb</title>
       </Head>
 
       {children}
+      <Footer />
     </>
   );
 };
